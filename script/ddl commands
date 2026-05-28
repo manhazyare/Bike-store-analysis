@@ -1,12 +1,30 @@
 USE master;
 GO
 
--- Create database
+-- =========================================
+-- Create Bike Sales Database
+-- =========================================
 CREATE DATABASE bike_sales_store;
 GO
 
--- Switch to the new database
 USE bike_sales_store;
+GO
+
+PRINT 'Database bike_sales_store created successfully';
+GO
+
+-- =========================================
+-- Drop Tables If They Already Exist
+-- =========================================
+TRUNCATE TABLE stocks;
+TRUNCATE TABLE order_items;
+TRUNCATE TABLE orders;
+TRUNCATE TABLE staffs;
+TRUNCATE TABLE stores;
+TRUNCATE TABLE customers;
+TRUNCATE TABLE products;
+TRUNCATE TABLE categories;
+TRUNCATE TABLE brands;
 GO
 
 -- =========================================
@@ -41,7 +59,7 @@ GO
 
 -- =========================================
 -- Products Table
--- Stores bike product details
+-- Stores product details
 -- =========================================
 CREATE TABLE products (
     product_id   INT            NOT NULL,
@@ -111,7 +129,7 @@ GO
 
 -- =========================================
 -- Staffs Table
--- Stores employee details
+-- Stores employee information
 -- =========================================
 CREATE TABLE staffs (
     staff_id   INT           NOT NULL,
@@ -129,7 +147,6 @@ CREATE TABLE staffs (
         FOREIGN KEY (store_id)
         REFERENCES stores(store_id),
 
-    -- Self reference for manager relationship
     CONSTRAINT FK_staffs_manager
         FOREIGN KEY (manager_id)
         REFERENCES staffs(staff_id)
@@ -166,14 +183,19 @@ GO
 
 -- =========================================
 -- Order Items Table
--- Stores products inside each order
+-- Stores products included in each order
 -- =========================================
 CREATE TABLE order_items (
     order_id    INT            NOT NULL,
     item_id     INT            NOT NULL,
     product_id  INT            NOT NULL,
-    quantity    SMALLINT       NOT NULL,
+
+    -- Quantity of products ordered
+    quantity    INT            NOT NULL,
+
     list_price  DECIMAL(10,2)  NOT NULL,
+
+    -- Discount applied to the item
     discount    DECIMAL(4,2)   NOT NULL DEFAULT 0.00,
 
     CONSTRAINT PK_order_items
@@ -220,5 +242,5 @@ GO
 -- =========================================
 -- Final Success Message
 -- =========================================
-PRINT 'Bike Sales Store database created successfully';
+PRINT 'Bike Sales Store DDL executed successfully';
 GO
