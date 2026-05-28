@@ -1,0 +1,49 @@
+-- =========================================
+-- Data Quality & NULL Value Notes
+-- =========================================
+
+/*
+Table: customers
+Column: phone
+
+Issue:
+1,267 NULL values out of 1,445 rows.
+
+Analysis:
+Missing phone numbers are expected because
+not every customer provided a phone number.
+
+Action:
+No action required since the column
+is already defined as NULLable.
+*/
+
+/*
+Table: orders
+Column: shipped_date
+
+Issue:
+170 NULL values found.
+
+Analysis:
+NULL shipped dates indicate orders
+that have not yet been shipped.
+
+Action:
+No action required.
+*/
+
+/*
+Table: staffs
+Column: manager_id
+
+Issue:
+1 NULL value found.
+
+Analysis:
+The NULL value belongs to the top-level
+manager who does not report to anyone.
+
+Action:
+No action required.
+*/
