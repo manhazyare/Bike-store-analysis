@@ -1,0 +1,224 @@
+USE master;
+GO
+
+-- Create database
+CREATE DATABASE bike_sales_store;
+GO
+
+-- Switch to the new database
+USE bike_sales_store;
+GO
+
+-- =========================================
+-- Brands Table
+-- Stores bike brand information
+-- =========================================
+CREATE TABLE brands (
+    brand_id   INT           NOT NULL,
+    brand_name NVARCHAR(255) NOT NULL,
+
+    CONSTRAINT PK_brands PRIMARY KEY (brand_id)
+);
+GO
+
+PRINT 'brands table created successfully';
+GO
+
+-- =========================================
+-- Categories Table
+-- Stores product categories
+-- =========================================
+CREATE TABLE categories (
+    category_id   INT           NOT NULL,
+    category_name NVARCHAR(255) NOT NULL,
+
+    CONSTRAINT PK_categories PRIMARY KEY (category_id)
+);
+GO
+
+PRINT 'categories table created successfully';
+GO
+
+-- =========================================
+-- Products Table
+-- Stores bike product details
+-- =========================================
+CREATE TABLE products (
+    product_id   INT            NOT NULL,
+    product_name NVARCHAR(255)  NOT NULL,
+    brand_id     INT            NOT NULL,
+    category_id  INT            NOT NULL,
+    model_year   SMALLINT       NOT NULL,
+    list_price   DECIMAL(10,2)  NOT NULL,
+
+    CONSTRAINT PK_products PRIMARY KEY (product_id),
+
+    CONSTRAINT FK_products_brand
+        FOREIGN KEY (brand_id)
+        REFERENCES brands(brand_id),
+
+    CONSTRAINT FK_products_category
+        FOREIGN KEY (category_id)
+        REFERENCES categories(category_id)
+);
+GO
+
+PRINT 'products table created successfully';
+GO
+
+-- =========================================
+-- Customers Table
+-- Stores customer information
+-- =========================================
+CREATE TABLE customers (
+    customer_id INT           NOT NULL,
+    first_name  NVARCHAR(50)  NOT NULL,
+    last_name   NVARCHAR(50)  NOT NULL,
+    phone       NVARCHAR(25)      NULL,
+    email       NVARCHAR(255) NOT NULL,
+    street      NVARCHAR(255) NOT NULL,
+    city        NVARCHAR(100) NOT NULL,
+    state       CHAR(2)       NOT NULL,
+    zip_code    CHAR(10)      NOT NULL,
+
+    CONSTRAINT PK_customers PRIMARY KEY (customer_id)
+);
+GO
+
+PRINT 'customers table created successfully';
+GO
+
+-- =========================================
+-- Stores Table
+-- Stores physical store information
+-- =========================================
+CREATE TABLE stores (
+    store_id   INT           NOT NULL,
+    store_name NVARCHAR(255) NOT NULL,
+    phone      NVARCHAR(25)      NULL,
+    email      NVARCHAR(255)     NULL,
+    street     NVARCHAR(255)     NULL,
+    city       NVARCHAR(100)     NULL,
+    state      CHAR(2)           NULL,
+    zip_code   CHAR(10)          NULL,
+
+    CONSTRAINT PK_stores PRIMARY KEY (store_id)
+);
+GO
+
+PRINT 'stores table created successfully';
+GO
+
+-- =========================================
+-- Staffs Table
+-- Stores employee details
+-- =========================================
+CREATE TABLE staffs (
+    staff_id   INT           NOT NULL,
+    first_name NVARCHAR(50)  NOT NULL,
+    last_name  NVARCHAR(50)  NOT NULL,
+    email      NVARCHAR(255) NOT NULL,
+    phone      NVARCHAR(25)      NULL,
+    active     TINYINT       NOT NULL,
+    store_id   INT           NOT NULL,
+    manager_id INT               NULL,
+
+    CONSTRAINT PK_staffs PRIMARY KEY (staff_id),
+
+    CONSTRAINT FK_staffs_store
+        FOREIGN KEY (store_id)
+        REFERENCES stores(store_id),
+
+    -- Self reference for manager relationship
+    CONSTRAINT FK_staffs_manager
+        FOREIGN KEY (manager_id)
+        REFERENCES staffs(staff_id)
+);
+GO
+
+PRINT 'staffs table created successfully';
+GO
+
+-- =========================================
+-- Orders Table
+-- Stores customer order records
+-- =========================================
+CREATE TABLE orders (
+    order_id      INT     NOT NULL,
+    customer_id   INT     NOT NULL,
+    order_status  TINYINT NOT NULL,
+    order_date    DATE    NOT NULL,
+    required_date DATE    NOT NULL,
+    shipped_date  DATE        NULL,
+    store_id      INT     NOT NULL,
+    staff_id      INT     NOT NULL,
+
+    CONSTRAINT PK_orders PRIMARY KEY (order_id),
+
+    CONSTRAINT FK_orders_customer
+        FOREIGN KEY (customer_id)
+        REFERENCES customers(customer_id)
+);
+GO
+
+PRINT 'orders table created successfully';
+GO
+
+-- =========================================
+-- Order Items Table
+-- Stores products inside each order
+-- =========================================
+CREATE TABLE order_items (
+    order_id    INT            NOT NULL,
+    item_id     INT            NOT NULL,
+    product_id  INT            NOT NULL,
+    quantity    SMALLINT       NOT NULL,
+    list_price  DECIMAL(10,2)  NOT NULL,
+    discount    DECIMAL(4,2)   NOT NULL DEFAULT 0.00,
+
+    CONSTRAINT PK_order_items
+        PRIMARY KEY (order_id, item_id),
+
+    CONSTRAINT FK_order_items_order
+        FOREIGN KEY (order_id)
+        REFERENCES orders(order_id),
+
+    CONSTRAINT FK_order_items_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(product_id)
+);
+GO
+
+PRINT 'order_items table created successfully';
+GO
+
+-- =========================================
+-- Stocks Table
+-- Stores inventory quantities
+-- =========================================
+CREATE TABLE stocks (
+    store_id   INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity   INT NOT NULL,
+
+    CONSTRAINT PK_stocks
+        PRIMARY KEY (store_id, product_id),
+
+    CONSTRAINT FK_stocks_store
+        FOREIGN KEY (store_id)
+        REFERENCES stores(store_id),
+
+    CONSTRAINT FK_stocks_product
+        FOREIGN KEY (product_id)
+        REFERENCES products(product_id)
+);
+GO
+
+PRINT 'stocks table created successfully';
+GO
+
+-- =========================================
+-- Final Success Message
+-- =========================================
+PRINT 'Bike Sales Store database created successfully';
+GO
