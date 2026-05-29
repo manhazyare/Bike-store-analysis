@@ -1,7 +1,6 @@
-# Bike-store-analysis
 # bike_sales_store
-# 🚲 Bike Store Data Warehouse & Analytics Project
-Welcome to the Bike Store Data Warehouse and Analytics Project repository! 🚀
+# 🚲 Bike Store Analytics Project
+Welcome to the Bike Store Analytics Project repository! 🚀
 This project explores transactional bike sales data to uncover actionable business insights — covering sales trends, product performance, customer behavior, and revenue patterns. Designed as a portfolio project, it highlights practical skills in data analytics and SQL-based reporting.
 
 ---
